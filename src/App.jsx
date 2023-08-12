@@ -1,11 +1,22 @@
-import {Heading} from '@chakra-ui/react'
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import router from "./routes"
 
 function App() {
   return (
-    <>
-      <div>Hello</div>
-      <Heading>World</Heading>
-    </>
+    <BrowserRouter>
+      <Routes>
+        {router.map((route) => {
+          const Element = route.element;
+          return (
+            <Route 
+              key={route.path}
+              path={route.path}
+              element={<Element />}
+            />
+          )
+        })}
+      </Routes>
+    </BrowserRouter>
   )
 }
 
