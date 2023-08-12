@@ -1,7 +1,6 @@
 import { Box, Image } from "@chakra-ui/react";
 
-export default function Card() {
-
+export default function VideoCard() {
   return (
     <Box
       borderRadius={10}

@@ -1,7 +1,7 @@
 import { Grid } from "@chakra-ui/react";
 import Layout from "../layout";
-import Card from "../components/video/Card";
 import { Link } from "react-router-dom";
+import VideoCard from "../components/video/Card";
 
 export default function HomePage() {
   return (
@@ -15,7 +15,7 @@ export default function HomePage() {
           rowGap={'9'}
         >
           <Link to='/detail'>
-            <Card />
+            <VideoCard />
           </Link>
         </Grid>
       </Layout>
