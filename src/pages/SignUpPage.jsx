@@ -3,13 +3,15 @@ import Layout from "../layout";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-export default function SignInPage() {
+export default function SignUpPage() {
+  const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   function handleSubmit(event) {
     event.preventDefault();
 
+    console.log(name);
     console.log(username);
     console.log(password);
   }
@@ -34,7 +36,11 @@ export default function SignInPage() {
               gap={'3'}
               flexDirection={'column'}
             >
-              <Heading size={'lg'}>Sign In</Heading>
+              <Heading size={'lg'}>Sign Up</Heading>
+                <InputGroup display={'flex'} flexDirection={'column'} gap={'2'}>
+                  <Text>Name</Text>
+                  <Input type="text" width={'18em'} border={'none'} background={'gray.700'} placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
+                </InputGroup>
                 <InputGroup display={'flex'} flexDirection={'column'} gap={'2'}>
                   <Text>Username</Text>
                   <Input type="text" width={'18em'} border={'none'} background={'gray.700'} placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
@@ -43,11 +49,11 @@ export default function SignInPage() {
                   <Text>Password</Text>
                   <Input type="password" width={'18em'} border={'none'} background={'gray.700'} placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
                 </InputGroup>
-                <Button colorScheme='blue' marginTop={'3'} type="submit">Sign In</Button>
+                <Button colorScheme='blue' marginTop={'3'} type="submit">Sign Up</Button>
                 <Text>
-                  {`Don't have an account? `}
-                  <Link to='/signup'>
-                    <Text as='span' color={'blue.400'} cursor={'pointer'}>Sign Up</Text>
+                  {`Already have an account? `}
+                  <Link to='/signin'>
+                    <Text as='span' color={'blue.400'} cursor={'pointer'}>Sign In</Text>
                   </Link>
                 </Text>
             </Flex>

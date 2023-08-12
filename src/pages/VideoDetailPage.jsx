@@ -2,8 +2,19 @@ import { Box, Flex, Grid, Tabs, TabList, TabPanels, Tab, TabPanel, Input } from 
 import Layout from "../layout";
 import ProductCard from "../components/product/Card";
 import CommentMessage from "../components/comment/CommentMessage";
+import { useState } from "react";
 
 export default function VideoDetailPage() {
+  const [comment, setComment] = useState('');
+
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    console.log(comment)
+
+    setComment('');
+  }
+
   return (
     <>
       <Layout>
@@ -12,7 +23,7 @@ export default function VideoDetailPage() {
             justifyContent={'center'}
           >
             {/* Youtube iframe */}
-            <iframe style={{width: '100vw'}} height="500" src="https://www.youtube.com/embed/UgrAQ2yYkXc" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <iframe style={{width: '100vw'}} height="500" src="https://www.youtube.com/embed/UgrAQ2yYkXc" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
           </Flex>
           <Box
             marginTop={'5'}
@@ -47,7 +58,9 @@ export default function VideoDetailPage() {
                       <CommentMessage />
                       <CommentMessage />
                     </Flex>
-                    <Input type="text" border={'none'} backgroundColor={'gray.700'} rounded={'3xl'} placeholder="Enter a comment" fontSize={'sm'} />
+                    <form onSubmit={handleSubmit}>
+                      <Input type="text" border={'none'} backgroundColor={'gray.700'} rounded={'3xl'} placeholder="Enter a comment" fontSize={'sm'} value={comment} onChange={(e) => setComment(e.target.value)} />
+                    </form>
                   </Box>
                 </TabPanel>
               </TabPanels>
