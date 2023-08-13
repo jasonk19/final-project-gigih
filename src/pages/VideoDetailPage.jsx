@@ -2,13 +2,16 @@ import { Box, Flex, Grid, Tabs, TabList, TabPanels, Tab, TabPanel, Input, useToa
 import Layout from "../layout";
 import ProductCard from "../components/product/Card";
 import CommentMessage from "../components/comment/CommentMessage";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import useFetch from "../hooks/useFetch";
 import { useParams } from "react-router-dom";
 import Loading from "../components/common/Loading";
 import useMutate from "../hooks/useMutate";
 import axios from "axios";
 import { UserContext } from "../context";
+import { io } from "socket.io-client";
+
+const socket = io.connect(import.meta.env.VITE_BASE_API_URL);
 
 export default function VideoDetailPage() {
   const { user } = useContext(UserContext);
@@ -32,15 +35,26 @@ export default function VideoDetailPage() {
 
   const { mutate: addComment } = useMutate({ service: axios.post, showErrorMessage: true })
 
-  console.log(comments)
-
   const [comment, setComment] = useState('');
+
+  const [commentList, setCommentList] = useState()
+
+  useEffect(() => {
+    setCommentList(comments)
+  }, [comments])
+
+  useEffect(() => {
+    function joinRoom() {
+      socket.emit('join_room', `Video:${id}`)
+    }
+    joinRoom();
+  }, [])
 
   async function handleSubmit(event) {
     event.preventDefault();
 
     if (user && localStorage.getItem('jkplay_access_token')) {
-      await addComment({
+      const response = await addComment({
         url: `${import.meta.env.VITE_BASE_API_URL}/comment/${id}`,
         payload: {
           comment
@@ -49,6 +63,11 @@ export default function VideoDetailPage() {
           'Authorization': 'Bearer ' + localStorage.getItem('jkplay_access_token')
         }
       })
+      setCommentList((state) => [
+        ...state,
+        response.comment
+      ])
+      socket.emit('send_comment', { comment: response.comment, room: `Video:${id}` })
     } else {
       toast({
         title: 'Please sign in to the app',
@@ -62,6 +81,17 @@ export default function VideoDetailPage() {
 
     setComment('');
   }
+
+  useEffect(() => {
+    socket.on('receive_comment', (data) => {
+      setCommentList((state) => [
+        ...state,
+        data.comment
+      ])
+    })
+
+    return () => socket.off('receive_comment')
+  }, [socket])
 
   return (
     <>
@@ -110,14 +140,14 @@ export default function VideoDetailPage() {
                         <Loading />
                       </Box>
                     ) : (
-                      comments && comments.length > 0 ? (
+                      commentList && commentList.length > 0 ? (
                         <Flex
                           marginBottom={'5'}
                           flexDirection={'column'}
                           gap={'4'}
                         >
-                          {comments.map((comment) => (
-                            <CommentMessage key={comment._id} username={comment.account.username} comment={comment.comment} />
+                          {commentList.map((comment) => (
+                            <CommentMessage key={comment._id} username={comment.username} comment={comment.comment}/>
                           ))}
                         </Flex>
                       ) : (
