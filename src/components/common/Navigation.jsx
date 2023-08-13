@@ -1,7 +1,14 @@
 import { Button, Flex, Heading } from "@chakra-ui/react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { UserContext } from "../../context";
+import Profile from "../user/Profile";
 
 export default function Navigation() {
+  const { user } = useContext(UserContext);
+
+  console.log(user)
+
   return (
     <>
       <Flex
@@ -23,9 +30,13 @@ export default function Navigation() {
           JK.Play
           </Heading>
         </Link>
-        <Link to='/signin'>
-          <Button>Sign In</Button>
-        </Link>
+        {user && localStorage.getItem('jkplay_access_token') ? (
+          <Profile />
+        ) : (
+          <Link to='/signin'>
+            <Button>Sign In</Button>
+          </Link>
+        )}
       </Flex>
     </>
   )

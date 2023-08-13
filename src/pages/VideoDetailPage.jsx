@@ -18,6 +18,12 @@ export default function VideoDetailPage() {
     url: `${import.meta.env.VITE_BASE_API_URL}/videos/${id}`,
   })
 
+  const { data: comments } = useFetch({
+    url: `${import.meta.env.VITA_BASE_API_URL}/comment/${id}`
+  })
+
+  console.log(comments)
+
   const [comment, setComment] = useState('');
 
   function handleSubmit(event) {

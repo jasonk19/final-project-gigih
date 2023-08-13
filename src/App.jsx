@@ -5,11 +5,7 @@ import { UserContext } from './context';
 
 
 function App() {
-  const [user, setUser] = useState({
-    id: '',
-    name: '',
-    username: '',
-  })
+  const [user, setUser] = useState(null)
 
   return (
     <UserContext.Provider
