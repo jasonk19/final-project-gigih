@@ -13,7 +13,7 @@ const router = [
     element: SignUpPage
   },
   {
-    path: '/detail',
+    path: '/video/:id',
     element: VideoDetailPage
   },
   {

@@ -1,4 +1,4 @@
-import { Grid } from "@chakra-ui/react";
+import { Box, Grid } from "@chakra-ui/react";
 import Layout from "../layout";
 import { Link } from "react-router-dom";
 import VideoCard from "../components/video/Card";
@@ -14,7 +14,11 @@ export default function HomePage() {
     <>
       <Layout>
         {loading ? (
-          <Loading />
+          <Box
+            paddingTop={'20'}
+          >
+            <Loading />
+          </Box>
         ) : (
           <Grid
             paddingTop={'20'}
