@@ -2,16 +2,24 @@ import { Heading, Flex, Input, Text, InputGroup, Button } from "@chakra-ui/react
 import Layout from "../layout";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import useMutate from "../hooks/useMutate";
+import axios from "axios";
 
 export default function SignInPage() {
+  const { mutate: SignIn, clear, loading, error } = useMutate({ service: axios.post })
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
-    console.log(username);
-    console.log(password);
+    await SignIn({
+      url: `${import.meta.env.VITE_BASE_API_URL}/account/login`,
+      payload: {
+        username, password
+      }
+    })
   }
 
   return (
@@ -37,13 +45,22 @@ export default function SignInPage() {
               <Heading size={'lg'}>Sign In</Heading>
                 <InputGroup display={'flex'} flexDirection={'column'} gap={'2'}>
                   <Text>Username</Text>
-                  <Input type="text" width={'18em'} border={'none'} background={'gray.700'} placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+                  <Input type="text" width={'18em'} border={'none'} background={'gray.700'} placeholder="Username" value={username} onChange={(e) => {
+                    clear()
+                    setUsername(e.target.value)
+                  }} isInvalid={error !== undefined}/>
                 </InputGroup>
                 <InputGroup display={'flex'} flexDirection={'column'} gap={'2'}>
                   <Text>Password</Text>
-                  <Input type="password" width={'18em'} border={'none'} background={'gray.700'} placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                  <Input type="password" width={'18em'} border={'none'} background={'gray.700'} placeholder="Password" value={password} onChange={(e) => {
+                    clear()
+                    setPassword(e.target.value)
+                  }} isInvalid={error !== undefined}/>
                 </InputGroup>
-                <Button colorScheme='blue' marginTop={'3'} type="submit">Sign In</Button>
+                {error && (
+                  <Text color={'red.400'}>{error.message}</Text>
+                )}
+                <Button colorScheme='blue' marginTop={'3'} type="submit" isLoading={loading} loadingText={'Submitting'}>Sign In</Button>
                 <Text>
                   {`Don't have an account? `}
                   <Link to='/signup'>
