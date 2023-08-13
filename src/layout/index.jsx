@@ -8,14 +8,20 @@ import { UserContext } from "../context";
 export default function Layout({children}) {
   const { setUser } = useContext(UserContext)
 
-  const { data: account } = useFetch({
+  const { data: account, error } = useFetch({
     url: `${import.meta.env.VITE_BASE_API_URL}/account/validate`,
     headers: {
       'Authorization': 'Bearer ' + localStorage.getItem('jkplay_access_token')
     }
   })
 
-  setUser(account)
+  if (error) {
+    setUser(null)
+    localStorage.removeItem('jkplay_access_token')
+  } else {
+    setUser(account)
+  }
+
 
   return (
     <>
