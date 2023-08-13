@@ -121,16 +121,25 @@ export default function VideoDetailPage() {
                   {productLoading ? (
                     <Loading />
                   ) : (
-                    <Grid
-                      templateColumns={'repeat(8, 1fr)'}
-                      marginTop={'5'}
-                      gap={'6'}
-                      rowGap={'6'}
-                    >
-                      {products.map((product) => (
-                        <ProductCard key={product._id} image={product.link} title={product.title} price={product.price} />
-                      ))}
-                    </Grid>
+                    products && products.length > 0 ? (
+                      <Grid
+                        templateColumns={'repeat(8, 1fr)'}
+                        marginTop={'5'}
+                        gap={'6'}
+                        rowGap={'6'}
+                      >
+                        {products.map((product) => (
+                          <ProductCard key={product._id} image={product.link} title={product.title} price={product.price} />
+                        ))}
+                      </Grid>
+                    ) : (
+                      <Flex
+                        justifyContent={'center'}
+                        marginBottom={'5'}
+                      >
+                        <Text color={'gray.500'}>Product is empty</Text>
+                      </Flex>
+                    )
                   )}
                 </TabPanel>
                 <TabPanel>
