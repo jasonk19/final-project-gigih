@@ -1,6 +1,7 @@
 import { Box, Image } from "@chakra-ui/react";
+import PropTypes from 'prop-types';
 
-export default function VideoCard() {
+export default function VideoCard({ thumbnail }) {
   return (
     <Box
       borderRadius={10}
@@ -10,7 +11,11 @@ export default function VideoCard() {
       position={'relative'}
       cursor={'pointer'}
     >
-      <Image src="https://picsum.photos/200/320" />
+      <Image src={thumbnail} />
     </Box>
   )
+}
+
+VideoCard.propTypes = {
+  thumbnail: PropTypes.string.isRequired
 }
