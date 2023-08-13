@@ -7,8 +7,6 @@ import Profile from "../user/Profile";
 export default function Navigation() {
   const { user } = useContext(UserContext);
 
-  console.log(user)
-
   return (
     <>
       <Flex

@@ -26,7 +26,7 @@ export default function useMutate({ service, showSuccessMessage = false, showErr
       setError(error.response.data)
       if (showErrorMessage) {
         toast({
-          title: errorMessage,
+          title: errorMessage ? errorMessage : error.response.data.message,
           status: 'error',
           duration: '3000',
           isClosable: true,

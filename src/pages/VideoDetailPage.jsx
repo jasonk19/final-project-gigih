@@ -1,14 +1,19 @@
-import { Box, Flex, Grid, Tabs, TabList, TabPanels, Tab, TabPanel, Input } from "@chakra-ui/react";
+import { Box, Flex, Grid, Tabs, TabList, TabPanels, Tab, TabPanel, Input, useToast, Text } from "@chakra-ui/react";
 import Layout from "../layout";
 import ProductCard from "../components/product/Card";
 import CommentMessage from "../components/comment/CommentMessage";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import useFetch from "../hooks/useFetch";
 import { useParams } from "react-router-dom";
 import Loading from "../components/common/Loading";
+import useMutate from "../hooks/useMutate";
+import axios from "axios";
+import { UserContext } from "../context";
 
 export default function VideoDetailPage() {
+  const { user } = useContext(UserContext);
   const { id } = useParams()
+  const toast = useToast();
   
   const { data: products, loading: productLoading } = useFetch({
     url: `${import.meta.env.VITE_BASE_API_URL}/product/${id}`,
@@ -18,18 +23,42 @@ export default function VideoDetailPage() {
     url: `${import.meta.env.VITE_BASE_API_URL}/videos/${id}`,
   })
 
-  const { data: comments } = useFetch({
-    url: `${import.meta.env.VITA_BASE_API_URL}/comment/${id}`
+  const { data: comments, loading: commentLoading } = useFetch({
+    url: `${import.meta.env.VITE_BASE_API_URL}/comment/${id}`,
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('jkplay_access_token')
+    }
   })
+
+  const { mutate: addComment } = useMutate({ service: axios.post, showErrorMessage: true })
 
   console.log(comments)
 
   const [comment, setComment] = useState('');
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
-    console.log(comment)
+    if (user && localStorage.getItem('jkplay_access_token')) {
+      await addComment({
+        url: `${import.meta.env.VITE_BASE_API_URL}/comment/${id}`,
+        payload: {
+          comment
+        },
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('jkplay_access_token')
+        }
+      })
+    } else {
+      toast({
+        title: 'Please sign in to the app',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top'
+      })
+      return
+    }
 
     setComment('');
   }
@@ -69,22 +98,37 @@ export default function VideoDetailPage() {
                       rowGap={'6'}
                     >
                       {products.map((product) => (
-                        <ProductCard key={product.id} image={product.link} title={product.title} price={product.price} />
+                        <ProductCard key={product._id} image={product.link} title={product.title} price={product.price} />
                       ))}
                     </Grid>
                   )}
                 </TabPanel>
                 <TabPanel>
                   <Box>
-                    <Flex
-                      marginBottom={'5'}
-                      flexDirection={'column'}
-                      gap={'4'}
-                    >
-                      <CommentMessage />
-                      <CommentMessage />
-                      <CommentMessage />
-                    </Flex>
+                    {commentLoading ? (
+                      <Box marginBottom={'5'}>
+                        <Loading />
+                      </Box>
+                    ) : (
+                      comments && comments.length > 0 ? (
+                        <Flex
+                          marginBottom={'5'}
+                          flexDirection={'column'}
+                          gap={'4'}
+                        >
+                          {comments.map((comment) => (
+                            <CommentMessage key={comment._id} username={comment.account.username} comment={comment.comment} />
+                          ))}
+                        </Flex>
+                      ) : (
+                        <Flex
+                          justifyContent={'center'}
+                          marginBottom={'5'}
+                        >
+                          <Text color={'gray.500'}>Comment is empty</Text>
+                        </Flex>
+                      )
+                    )}
                     <form onSubmit={handleSubmit}>
                       <Input type="text" border={'none'} backgroundColor={'gray.700'} rounded={'3xl'} placeholder="Enter a comment" fontSize={'sm'} value={comment} onChange={(e) => setComment(e.target.value)} />
                     </form>

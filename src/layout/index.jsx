@@ -2,7 +2,7 @@ import { Box } from "@chakra-ui/react";
 import Navigation from "../components/common/Navigation";
 import PropTypes from 'prop-types';
 import useFetch from "../hooks/useFetch";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { UserContext } from "../context";
 
 export default function Layout({children}) {
@@ -17,12 +17,15 @@ export default function Layout({children}) {
     errorMessage: 'Session expired'
   })
 
-  if (error) {
-    setUser(null)
-    localStorage.removeItem('jkplay_access_token')
-  } else {
-    setUser(account)
-  }
+  useEffect(() => {
+    if (error) {
+      setUser(null)
+      localStorage.removeItem('jkplay_access_token')
+    } else {
+      setUser(account)
+    }
+  })
+
 
 
   return (

@@ -1,6 +1,7 @@
 import { Box, Text } from "@chakra-ui/react";
+import PropTypes from 'prop-types';
 
-export default function CommentMessage() {
+export default function CommentMessage({ username, comment }) {
   return (
     <>
       <Box
@@ -8,9 +9,14 @@ export default function CommentMessage() {
         backgroundColor={'rgba(45, 55, 72, 0.6)'}
         rounded={'2xl'}
       >
-        <Text fontWeight={'semibold'}>@Bob</Text>
-        <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam magna lacus, elementum sit amet ipsum non, consectetur ultricies ligula. In id iaculis sem, a eleifend tellus. In at nisl bibendum augue ultricies euismod ac quis.</Text>
+        <Text fontWeight={'semibold'}>@{username}</Text>
+        <Text>{comment}</Text>
       </Box>
     </>
   )
+}
+
+CommentMessage.propTypes = {
+  username: PropTypes.string.isRequired,
+  comment: PropTypes.string.isRequired
 }
