@@ -12,7 +12,9 @@ export default function Layout({children}) {
     url: `${import.meta.env.VITE_BASE_API_URL}/account/validate`,
     headers: {
       'Authorization': 'Bearer ' + localStorage.getItem('jkplay_access_token')
-    }
+    },
+    showErrorMessage: localStorage.getItem('jkplay_access_token') ? true : false,
+    errorMessage: 'Session expired'
   })
 
   if (error) {

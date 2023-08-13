@@ -9,7 +9,7 @@ import AccountProtector from "../components/protector/AccountProtector";
 export default function SignInPage() {
   const navigate = useNavigate();
 
-  const { mutate: SignIn, clear, loading, error } = useMutate({ service: axios.post })
+  const { mutate: SignIn, clear, loading, error } = useMutate({ service: axios.post, showSuccessMessage: true, successMessage: 'Sign in successful' })
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
