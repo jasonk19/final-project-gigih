@@ -1,12 +1,14 @@
 import { Heading, Flex, Input, Text, InputGroup, Button } from "@chakra-ui/react";
 import Layout from "../layout";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useMutate from "../hooks/useMutate";
 import axios from "axios";
 
 export default function SignUpPage() {
-  const { mutate: SignUp, clear, loading, error } = useMutate({ service: axios.post })
+  const navigate = useNavigate();
+
+  const { mutate: SignUp, clear, loading, error, result } = useMutate({ service: axios.post })
 
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
@@ -20,6 +22,9 @@ export default function SignUpPage() {
         name, username, password
       }
     })
+
+    localStorage.setItem('jkplay_access_token', result.token)
+    navigate('/')
   }
 
   return (

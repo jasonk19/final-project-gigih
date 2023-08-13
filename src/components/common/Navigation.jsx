@@ -20,7 +20,7 @@ export default function Navigation() {
             as={'h1'}
             cursor={'pointer'}
           >
-          Play
+          JK.Play
           </Heading>
         </Link>
         <Link to='/signin'>
