@@ -13,7 +13,7 @@ export default function useFetch({ url, params, headers }) {
         setData(response.data);
         setLoading(false);
       } catch (error) {
-        setError(error);
+        setError(error.response.data);
         setLoading(false);
       }
     }
